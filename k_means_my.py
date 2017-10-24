@@ -22,22 +22,31 @@ class MyKMeans:
         self.metric = metric
         self.max_iter = max_iter
         self.centers = []
+        self.metric = metric
 
 
-    @staticmethod
-    def distance(vector1, vector2):
+
+    def distance(self,vector1, vector2):
         '''
         Определяем функцию расстояния
         '''
         dist_d = 0
+        if self.metric =='euclidean':
+            date_d = list(map(lambda pair:(pair[0]-pair[1])**2,zip(vector1,vector2)))
         
-        date_d = list(map(lambda pair:(pair[0]-pair[1])**2,zip(vector1,vector2)))
-        
-        for x in date_d: 
-            dist_d += x
-        dist_d = np.sqrt(dist_d)
-        return dist_d
-        
+            for x in date_d:
+                dist_d += x
+            dist_d = np.sqrt(dist_d)
+            return dist_d
+        elif self.metric =='chebishev':
+            date_d = list(map(lambda pair: (pair[0] - pair[1]), zip(vector1, vector2)))
+            print(date_d)
+            dist_d = max(date_d)
+            return dist_d
+        elif self.metric =='manhettan':
+            date_d = list(map(lambda pair: abs(pair[0] - pair[1]), zip(vector1, vector2)))
+            dist_d = sum(date_d)
+            return dist_d
     
     def predict(self, X):
         '''
@@ -46,7 +55,7 @@ class MyKMeans:
         list_data = []
         print(" centers ", len(self.centers), " x ", len(X))
         print(self.centers)
-        for x in X:                
+        for x in X:
             dist_data = [self.distance(x,c) for c in self.centers]
             list_data.append(dist_data.index(min(dist_data)))
                     
@@ -120,7 +129,7 @@ kmeans = KMeans(init='random', n_clusters=3, random_state=0)
         
 proc_data = kmeans.fit_predict(my_data)       
 
-mY_k =  MyKMeans(n_clusters=3)
+mY_k =  MyKMeans(n_clusters=3, metric='chebishev')
 
 my_kmeans = mY_k.fit(my_data)
         
@@ -129,37 +138,6 @@ my_proc_data = my_kmeans
 print(" ski my  ", my_proc_data)
 
 print(" ski ", proc_data, " k means ", kmeans.cluster_centers_)
-
-
-import matplotlib.pyplot as plt
-
-import matplotlib.image as mpimg
-
-image = mpimg.imread('./mailru.jpg')
-
-plt.figure()
-plt.axis("off")
-plt.imshow(image)
-plt.show()
-
-data = image.reshape((image.shape[0]*image.shape[1],3))
-
-kmeans = MyKMeans(n_clusters=64)
-
-
-my_kmeans = kmeans.fit(data)
-
-new_image = []
-for cluster in my_kmeans:
-    new_image.append(kmeans.cluste[cluster])
-    
-    
-new_image = new_image.reshape((image.shape[0],image.shape[1],3))
-
-
-plt.axis("off")
-plt.imshow(new_image)
-plt.show()
 
 #print(" means ", my_proc_data, len(my_proc_data))
 
