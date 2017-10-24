@@ -40,7 +40,6 @@ class MyKMeans:
             return dist_d
         elif self.metric =='chebishev':
             date_d = list(map(lambda pair: (pair[0] - pair[1]), zip(vector1, vector2)))
-            print(date_d)
             dist_d = max(date_d)
             return dist_d
         elif self.metric =='manhettan':
